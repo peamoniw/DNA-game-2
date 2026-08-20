@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Space Pair - เกมจับคู่เบส</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen active">
+        <h1 class="game-title-top">DNA SPACE PAIR</h1>
+        <div class="screen-container">
+            <div class="card">
+                <p class="subtitle">จับคู่เบสให้ถูกต้อง!</p>
+                
+                <div class="pairing-info">
+                    <span>A ↔ T</span>
+                    <span class="separator">|</span>
+                    <span>C ↔ G</span>
+                </div>
+                
+                <input 
+                    type="text" 
+                    id="playerName" 
+                    class="input-field" 
+                    placeholder="ป้อนชื่อของคุณ"
+                    maxlength="15"
+                >
+                
+                <button id="startBtn" class="btn btn-primary">เริ่มเกม</button>
+                <button id="leaderboardBtn" class="btn btn-secondary">อันดับคะแนน</button>
+                <button id="settingsBtn" class="btn btn-secondary">ตั้งค่า</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Screen -->
+    <div id="instructionScreen" class="screen">
+        <div class="screen-container">
+            <div class="card">
+                <h2>วิธีเล่น</h2>
+                
+                <div class="instructions">
+                    <p>บังคับยานไปรับคู่เบสให้ถูกต้อง!</p>
+                    <p>A คู่กับ T และ C คู่กับ G</p>
+                    
+                    <div class="instruction-example">
+                        <p>ตัวอย่าง: ถ้ายานของคุณแสดง A ให้เก็บ T</p>
+                    </div>
+                    
+                    <p class="instruction-controls">
+                        🖱️ <strong>เดสก์ท็อป:</strong> ใช้เมาส์ลากขึ้นลงหรือลูกศร ← →<br>
+                        📱 <strong>มือถือ:</strong> ลากจากซ้ายไปขวา
+                    </p>
+                </div>
+                
+                <button id="readyBtn" class="btn btn-primary">พร้อมแล้ว!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown Screen -->
+    <div id="countdownScreen" class="screen">
+        <div class="screen-container">
+            <div class="countdown-display" id="countdownDisplay">3</div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-header">
+            <div class="stat">
+                <span class="label">คะแนน</span>
+                <span class="value" id="scoreDisplay">0</span>
+            </div>
+            <div class="stat">
+                <span class="label">ชีวิต</span>
+                <span class="value" id="livesDisplay">3</span>
+            </div>
+            <div class="stat">
+                <span class="label">คอมโบ</span>
+                <span class="value" id="comboDisplay">0</span>
+            </div>
+        </div>
+        
+        <div class="target-info" id="targetInfo">
+            ยานของคุณ: <span id="currentBase">A</span> → เก็บ <span id="targetBase">T</span>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="pairing-reminder">
+            A ↔ T | C ↔ G
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="screen">
+        <div class="screen-container">
+            <div class="card game-over-card">
+                <h2>หมดเวลา!</h2>
+                
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-label">คะแนนสุดท้าย</span>
+                        <span class="stat-value" id="finalScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">คอมโบสูงสุด</span>
+                        <span class="stat-value" id="maxCombo">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">คู่เบสที่ถูกต้อง</span>
+                        <span class="stat-value" id="correctPairs">0</span>
+                    </div>
+                </div>
+                
+                <div id="newHighScoreMsg" class="new-high-score" style="display: none;">
+                    🎉 สร้างสถิติใหม่! 🎉
+                </div>
+                
+                <button id="playAgainBtn" class="btn btn-primary">เล่นอีกครั้ง</button>
+                <button id="menuBtn" class="btn btn-secondary">กลับหน้าแรก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="leaderboardScreen" class="screen">
+        <div class="screen-container">
+            <div class="card">
+                <h2>อันดับคะแนน</h2>
+                
+                <div class="leaderboard" id="leaderboard">
+                    <p class="empty-message">ยังไม่มีคะแนน</p>
+                </div>
+                
+                <button id="backToMenuBtn" class="btn btn-secondary">กลับ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settingsScreen" class="screen">
+        <div class="screen-container">
+            <div class="card">
+                <h2>ตั้งค่า</h2>
+                
+                <div class="settings-group">
+                    <label class="setting-item">
+                        <span>เสียง</span>
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    
+                    <label class="setting-item">
+                        <span>เพลง</span>
+                        <input type="checkbox" id="musicToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    
+                    <div class="setting-item">
+                        <span>ธีม</span>
+                        <select id="themeSelect" class="select-field">
+                            <option value="space-blue">Space Blue</option>
+                            <option value="cosmic-purple">Cosmic Purple</option>
+                            <option value="colorful-space">Colorful Space</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <span>เอฟเฟกต์</span>
+                        <select id="effectsSelect" class="select-field">
+                            <option value="high">สูง</option>
+                            <option value="low">ต่ำ</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="resetScoresBtn" class="btn btn-danger">ล้างคะแนน</button>
+                <button id="closeSettingsBtn" class="btn btn-secondary">ปิด</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
