@@ -41,12 +41,18 @@ body.colorful-space {
     --nebula-color-3: #9d4edd;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0a0e27;
     color: var(--text);
     overflow: hidden;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
 }
 
@@ -284,14 +290,15 @@ body::after {
 
 /* Game Screen Styles */
 .game-header {
-    position: absolute;
-    top: 20px;
+    position: fixed;
+    top: max(12px, env(safe-area-inset-top));
     left: 20px;
     right: 20px;
     display: flex;
     justify-content: space-around;
     gap: 20px;
-    z-index: 10;
+    z-index: 20;
+    pointer-events: none;
 }
 
 .stat {
@@ -320,8 +327,8 @@ body::after {
 }
 
 .target-info {
-    position: absolute;
-    top: 150px;
+    position: fixed;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(15, 20, 50, 0.8);
@@ -330,7 +337,10 @@ body::after {
     padding: 15px 30px;
     font-size: 1.3em;
     font-weight: 600;
-    z-index: 10;
+    z-index: 20;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+    pointer-events: none;
 }
 
 #currentBase {
@@ -346,15 +356,17 @@ body::after {
 /* Canvas */
 #gameCanvas {
     display: block;
-    margin: 0 auto;
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
 }
 
 .pairing-reminder {
-    position: absolute;
-    bottom: 20px;
+    position: fixed;
+    bottom: max(12px, env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     background: rgba(15, 20, 50, 0.7);
@@ -363,7 +375,8 @@ body::after {
     padding: 10px 20px;
     font-size: 1em;
     font-weight: 600;
-    z-index: 10;
+    z-index: 20;
+    pointer-events: none;
 }
 
 /* Game Over Stats */
@@ -574,6 +587,9 @@ input[type="checkbox"]:checked + .toggle-slider::after {
     .game-header {
         flex-direction: column;
         gap: 10px;
+        top: max(12px, env(safe-area-inset-top));
+        left: 10px;
+        right: 10px;
     }
 
     .stat {
@@ -583,21 +599,15 @@ input[type="checkbox"]:checked + .toggle-slider::after {
     }
 
     .target-info {
+        top: 150px;
         font-size: 1em;
         padding: 10px 20px;
-        top: 130px;
     }
 
     .pairing-reminder {
         font-size: 0.85em;
         padding: 8px 15px;
-        bottom: 10px;
-    }
-
-    .game-header {
-        top: 10px;
-        left: 10px;
-        right: 10px;
+        bottom: max(10px, env(safe-area-inset-bottom));
     }
 
     .btn {
@@ -640,7 +650,8 @@ input[type="checkbox"]:checked + .toggle-slider::after {
     .target-info {
         font-size: 0.85em;
         padding: 8px 15px;
-        top: 110px;
+        top: 140px;
+        width: calc(100vw - 20px);
     }
 
     .stats-summary {

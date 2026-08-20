@@ -6,8 +6,8 @@
 const CONFIG = {
     INITIAL_LIVES: 3,
     BASE_SCORE: 100,
-    INITIAL_FALL_SPEED: 2.5,
-    MAX_FALL_SPEED: 8,
+   
+    
     GAME_WIDTH: window.innerWidth,
     GAME_HEIGHT: window.innerHeight,
     SHIP_WIDTH: 60,
@@ -497,14 +497,14 @@ function updateGameState(deltaTime) {
         lastSpawnTime = now;
     }
 
-    // Calculate difficulty based on time elapsed
-    const elapsed = (now - gameState.gameStartTime) / 1000;
-    const speedMultiplier = 1 + (elapsed / 60) * 2;  // Gradually increase speed
+    // Increase fall speed based on combo, capped to avoid runaway difficulty
+    const comboMultiplier = 1 + Math.min(gameState.combo * 0.02, (CONFIG.MAX_FALL_SPEED / CONFIG.INITIAL_FALL_SPEED) - 1);
 
     // Update falling bases
     for (let i = fallingBases.length - 1; i >= 0; i--) {
         const base = fallingBases[i];
-        base.y += base.speed * speedMultiplier;
+        const effectiveSpeed = Math.min(base.speed * comboMultiplier, CONFIG.MAX_FALL_SPEED);
+        base.y += effectiveSpeed;
 
         // Check collision with ship
         if (checkCollision(ship, base)) {
@@ -536,6 +536,7 @@ function updateGameState(deltaTime) {
                 // Wrong pair - lose a life
                 gameState.lives--;
                 gameState.combo = 0;
+                base.speed = CONFIG.INITIAL_FALL_SPEED;
                 playSound('wrong');
                 createParticles(base.x, base.y, '#ff006e', 3);
                 createFloatingText(base.x, base.y, 'ผิด!', '#ff006e');
